@@ -1,60 +1,46 @@
 <?php
 
-class TaskModel {
+class StudentModel {
 
     private $db;
 
     public function __construct() {
-        $this->db = new PDO('mysql:host=localhost;'.'dbname=db_tasks;charset=utf8', 'root', '');
+        $this->db = new PDO('mysql:host=localhost;'.'dbname=db_universidad;charset=utf8', 'root', '');
     }
+    //trae todos los estudiantes
+    function getAllStudents($params){
+        $query = $this->db->prepare("SELECT * 
+                                     FROM `estudiantes` 
+                                     INNER JOIN `carreras_grado` 
+                                     on estudiantes.carrera_id = carreras_grado.id_carrera
+                                     WHERE estudiantes.carrera_id = $params[where]
+                                     ORDER BY $params[field] $params[sort]
+                                     LIMIT $params[limit]
+                                     OFFSET $params[offset]");
 
-    /**
-     * Devuelve la lista de tareas completa.
-     */
-    public function getAll() {
-        // 1. abro conexión a la DB
-        // ya esta abierta por el constructor de la clase
-
-        // 2. ejecuto la sentencia (2 subpasos)
-        $query = $this->db->prepare("SELECT * FROM task");
         $query->execute();
-
-        // 3. obtengo los resultados
-        $tasks = $query->fetchAll(PDO::FETCH_OBJ); // devuelve un arreglo de objetos
-        
-        return $tasks;
+        $students = $query->fetchAll(PDO::FETCH_OBJ);
+        return $students;
     }
+    //trae estudiante segun el id
+    function getStudentId($id){
+        $query = $this->db->prepare("SELECT * 
+                                     FROM `estudiantes`
+                                     INNER JOIN `carreras_grado` 
+                                     on estudiantes.carrera_id = carreras_grado.id_carrera 
+                                     WHERE estudiantes.id = ?");
 
-    public function get($id) {
-        $query = $this->db->prepare("SELECT * FROM task WHERE id = ?");
         $query->execute([$id]);
-        $task = $query->fetch(PDO::FETCH_OBJ);
-        
-        return $task;
+        return $query->fetchAll(PDO::FETCH_OBJ);
     }
-
-    /**
-     * Inserta una tarea en la base de datos.
-     */
-    public function insert($title, $description, $priority) {
-        $query = $this->db->prepare("INSERT INTO task (titulo, descripcion, prioridad, finalizada) VALUES (?, ?, ?, ?)");
-        $query->execute([$title, $description, $priority, false]);
+    //agrega estudiante
+    public function addStudents($nombre, $edad, $dni, $carrera){
+    
+        $query = $this->db->prepare("INSERT INTO `estudiantes` (nombre, edad, dni, carrera_id)  
+                                     VALUES(?,?,?,?)");
+        $query->execute([$nombre, $edad, $dni, $carrera]);
 
         return $this->db->lastInsertId();
     }
 
-
-    /**
-     * Elimina una tarea dado su id.
-     */
-    function delete($id) {
-        $query = $this->db->prepare('DELETE FROM task WHERE id = ?');
-        $query->execute([$id]);
-    }
-
-    public function finalize($id) {
-        $query = $this->db->prepare('UPDATE task SET finalizada = 1 WHERE id = ?');
-        $query->execute([$id]);
-        // var_dump($query->errorInfo()); // y eliminar la redireccion
-    }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-10-2022 a las 00:19:39
+-- Tiempo de generación: 16-11-2022 a las 01:30:42
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `carreras_grado` (
-  `id` int(11) NOT NULL,
+  `id_carrera` int(11) NOT NULL,
   `carrera` varchar(100) NOT NULL,
   `duracion` varchar(100) NOT NULL,
   `sede` varchar(66) NOT NULL
@@ -38,13 +38,14 @@ CREATE TABLE `carreras_grado` (
 -- Volcado de datos para la tabla `carreras_grado`
 --
 
-INSERT INTO `carreras_grado` (`id`, `carrera`, `duracion`, `sede`) VALUES
+INSERT INTO `carreras_grado` (`id_carrera`, `carrera`, `duracion`, `sede`) VALUES
 (1, 'Ingeniería En Sistemas', '5 años', 'Tandil'),
 (2, 'TUDAI', '5 cuatrimestres', 'Tandil'),
 (3, 'TUARI', '5 cuatrimestres', 'Tandil'),
 (4, 'Prof. de Informática', '5 años', 'Tandil'),
 (5, 'Prof. de Física', '5 años', 'Lamadrid'),
-(6, 'Abogacía', '5 años', 'Azul');
+(6, 'Abogacía', '5 años', 'Azul'),
+(16, 'Tecnologia de los alimentos', '2.5 años', 'Olavarría');
 
 -- --------------------------------------------------------
 
@@ -65,9 +66,13 @@ CREATE TABLE `estudiantes` (
 --
 
 INSERT INTO `estudiantes` (`id`, `nombre`, `edad`, `dni`, `carrera_id`) VALUES
-(1, 'Iván Almestro', 20, 44535277, 5),
-(2, 'Jazmín Reynoso', 19, 45303093, 6),
-(3, 'Lucas Gómez', 23, 42034055, 3);
+(30, 'Ivan Almestro', 23, 44535277, 3),
+(31, 'Jazmin Reynoso', 19, 41241447, 3),
+(33, 'Sebastian Almestro', 18, 45041420, 5),
+(45, 'Martin Gimenez', 20, 31231331, 5),
+(46, 'Lucas Gimenez', 25, 38231331, 5),
+(48, 'Maria Gimenez', 18, 43525288, 1),
+(51, 'Sebastian Bernardi', 22, 40123882, 2);
 
 -- --------------------------------------------------------
 
@@ -87,7 +92,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`email`, `password`, `id`) VALUES
 ('ivan.almestro@hotmail.com', '$2y$10$gfBd9fY2aoPPywM4Re.j2uMVuR3GB5.rQyJldGvKvH/J7Demd4mBi', 2),
-('admin@hotmail.com', '$2a$12$uhioRiociwQ0t/6zgk2YWu9o40tG8zCoj7cIoNwWatLTUOHidMzHC', 3);
+('admin@hotmail.com', '$2a$12$FUcfca.Z/f47T35wHXXxgerigUK5YhY4Ba6DcqG3.RwSODZR.K12S', 4);
 
 --
 -- Índices para tablas volcadas
@@ -97,7 +102,8 @@ INSERT INTO `usuarios` (`email`, `password`, `id`) VALUES
 -- Indices de la tabla `carreras_grado`
 --
 ALTER TABLE `carreras_grado`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_carrera`),
+  ADD UNIQUE KEY `carrera` (`carrera`);
 
 --
 -- Indices de la tabla `estudiantes`
@@ -120,19 +126,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `carreras_grado`
 --
 ALTER TABLE `carreras_grado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_carrera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `estudiantes`
 --
 ALTER TABLE `estudiantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
@@ -142,7 +148,7 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `estudiantes`
 --
 ALTER TABLE `estudiantes`
-  ADD CONSTRAINT `estudiantes_ibfk_1` FOREIGN KEY (`carrera_id`) REFERENCES `carreras_grado` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `estudiantes_ibfk_1` FOREIGN KEY (`carrera_id`) REFERENCES `carreras_grado` (`id_carrera`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
