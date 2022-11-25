@@ -1,6 +1,6 @@
 Para utilizar la base de datos, se debe importar el archivo que se encuentra dentro de la carpeta 'database'.
 
-ENDPOINTS:
+ENDPOINTS
 Los diferentes endpoints que ofrece la API son los siguientes:
 
 • Obtener todos los estudiantes: GET -> /students.
